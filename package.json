@@ -1,0 +1,25 @@
+{
+  "name": "store",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx @tailwindcss/cli -i static/src/tailwind.css -o static/src/styles.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maksirh/DigiNest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maksirh/DigiNest/issues"
+  },
+  "homepage": "https://github.com/maksirh/DigiNest#readme",
+  "description": "",
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11"
+  }
+}
