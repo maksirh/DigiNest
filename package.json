@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx @tailwindcss/cli -i static/src/tailwind.css -o static/src/styles.css --watch"
+    "build": "npx @tailwindcss/cli -i static/src/styles/tailwind.css -o static/src/styles/styles.css --watch"
   },
   "repository": {
     "type": "git",

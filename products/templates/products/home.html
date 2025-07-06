@@ -1,15 +1,73 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DigiNest</title>
-    <link rel="stylesheet" href="{% static 'products/style.css' %}">
-</head>
-<body>
+{% extends 'products/base.html' %}
 
-    <h1>Home</h1>
-    
-</body>
-</html>
+
+{% block content %}
+  <section class="bg-gray-900 text-white py-20 text-center">
+    <h2 class="text-4xl font-bold mb-4">Цифрові товари для твого проєкту</h2>
+    <p  class="text-lg mb-6">Шаблони, книги, інструменти — усе в одному місці</p>
+    <a href="{% url 'catalog' %}"
+       class="bg-white text-gray-900 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition">
+       Переглянути каталог
+    </a>
+  </section>
+
+  <section id="catalog" class="py-16">
+    <div class="container mx-auto px-4">
+      <h3 class="text-2xl font-bold text-center mb-10">Популярні товари</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <img src="https://via.placeholder.com/300x200" alt="Product 1" class="rounded mb-4">
+          <h4 class="text-lg font-semibold mb-2">Шаблон резюме Junior Python Dev</h4>
+          <p  class="text-sm text-gray-600 mb-4">Стильне, професійне CV у форматі PDF і DOCX</p>
+          <span class="block font-bold text-gray-900 mb-2">₴79</span>
+          <button class="w-full bg-gray-900 text-white py-2 rounded-xl hover:bg-gray-800 transition">
+            Додати до кошика
+          </button>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <img src="https://via.placeholder.com/300x200" alt="Product 2" class="rounded mb-4">
+          <h4 class="text-lg font-semibold mb-2">E-книга: Продуктивність з AI</h4>
+          <p  class="text-sm text-gray-600 mb-4">Практичні методи використання GPT-4 в роботі</p>
+          <span class="block font-bold text-gray-900 mb-2">₴49</span>
+          <button class="w-full bg-gray-900 text-white py-2 rounded-xl hover:bg-gray-800 transition">
+            Додати до кошика
+          </button>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <img src="https://via.placeholder.com/300x200" alt="Product 3" class="rounded mb-4">
+          <h4 class="text-lg font-semibold mb-2">Іконки для вебдизайнерів (SVG + PNG)</h4>
+          <p  class="text-sm text-gray-600 mb-4">Понад 300 унікальних іконок у темній і світлій темі</p>
+          <span class="block font-bold text-gray-900 mb-2">₴99</span>
+          <button class="w-full bg-gray-900 text-white py-2 rounded-xl hover:bg-gray-800 transition">
+            Додати до кошика
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="about" class="bg-white py-16">
+    <div class="container mx-auto px-4 text-center max-w-3xl">
+      <h3 class="text-2xl font-bold mb-6">Про DigiNest</h3>
+      <p class="text-gray-600 text-lg">
+        Ми — платформа цифрових ресурсів для розробників, дизайнерів та всіх, хто хоче пришвидшити свій прогрес.
+        У нас ви знайдете унікальні шаблони, електронні книги, іконки та генератори — усе перевірене і готове до використання.
+      </p>
+    </div>
+  </section>
+
+
+  <section id="contact" class="bg-gray-100 py-16">
+    <div class="container mx-auto px-4 text-center max-w-2xl">
+      <h3 class="text-2xl font-bold mb-4">Контакти</h3>
+      <p class="text-gray-700 mb-4">Зв’яжіться з нами: <a href="mailto:hello@diginest.shop" class="underline">hello@diginest.shop</a></p>
+      <p class="text-gray-700">Instagram — <span class="underline">@diginest</span></p>
+    </div>
+  </section>
+
+  {% endblock content %}

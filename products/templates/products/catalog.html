@@ -1,0 +1,47 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-6 py-12 space-y-8">
+
+  <h2 class="text-4xl font-bold text-gray-900 text-center">Каталог товарів</h2>
+  <br>
+  <div class="flex justify-center">
+    <form action="" method="get" class="flex w-75">
+      <input type="search" name="q" placeholder="Пошук…"
+        class="w-full [4000px] md:w-[600px] border border-gray-450 rounded-l-lg px-3 py-2 text-sm focus:outline-none focus:border-gray-900">
+      <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-r-lg text-sm hover:bg-gray-800 transition">
+        🔍
+      </button>
+    </form>
+  </div>
+  <br>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for item in products %}
+    <div class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col">
+      <a href="{% url 'product-detail' item.id %}" class="block">
+        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-32 h-32 object-cover rounded-xl shadow-md">
+      </a>
+      <div class="p-6 flex flex-col flex-grow space-y-4">
+        <h3 class="text-xl font-semibold text-gray-900">
+          <a href="{% url 'product-detail' item.id %}" class="hover:underline">{{ item.name }}</a>
+        </h3>
+        <p class="text-gray-700 flex-grow whitespace-pre-line">
+          {{ item.description|truncatechars:100 }}
+        </p>
+        <div class="flex items-center justify-between">
+          <span class="text-2xl font-bold text-gray-900">₴{{ item.price }}</span>
+          <a href="{% url 'product-detail' item.id %}"
+            class="bg-gray-900 text-white px-4 py-2 rounded-xl text-sm hover:bg-gray-800 transition">
+            Деталі
+          </a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="col-span-full text-center text-gray-500">Товари не знайдено.</p>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

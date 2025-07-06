@@ -1,0 +1,59 @@
+{% extends 'products/base.html' %}
+
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-12">
+
+  <!-- breadcrumb -->
+  <nav class="text-sm mb-8 text-gray-500">
+    <a href="{% url 'home' %}"      class="hover:text-gray-900">Головна</a> /
+    <a href="{% url 'catalog' %}"   class="hover:text-gray-900">Каталог</a> /
+    <span class="text-gray-900">{{ item.name }}</span>
+  </nav>
+
+  <!-- картка товару -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+    <!-- зображення -->
+    <img
+      src="{{ item.image.url }}"
+      alt="{{ item.name }}"
+      class="w-full rounded-xl shadow-md object-cover">
+
+    <!-- опис -->
+    <div class="flex flex-col space-y-6">
+
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-1">{{ item.name }}</h1>
+        <p  class="text-sm text-gray-500">{{ item.type.name }}</p>
+      </div>
+
+      <p class="text-gray-700 leading-relaxed">
+        {{ item.shortDescription|linebreaksbr }}
+      </p>
+
+      <p class="text-gray-700 leading-relaxed">
+        {{ item.description|linebreaksbr }}
+      </p>
+
+      <!-- ціна + кнопка -->
+      <div class="flex items-center gap-6 mt-auto">
+        <span class="text-3xl font-bold text-gray-900 whitespace-nowrap">
+          ₴{{ item.price }}
+        </span>
+
+        <form action="#" method="post" class="flex-1">
+          {% csrf_token %}
+          <button
+            class="w-full bg-gray-900 text-white py-3 rounded-xl
+                   hover:bg-gray-800 transition">
+            Додати до кошика
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
