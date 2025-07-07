@@ -261,6 +261,10 @@
     width: 75%;
   }
 
+  .w-50 {
+    width: 50%;
+  }
+
   .max-w-2xl {
     max-width: var(--container-2xl);
   }

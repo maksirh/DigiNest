@@ -4,23 +4,19 @@
 {% block content %}
 <div class="max-w-5xl mx-auto px-4 py-12">
 
-  <!-- breadcrumb -->
+
   <nav class="text-sm mb-8 text-gray-500">
     <a href="{% url 'home' %}"      class="hover:text-gray-900">Головна</a> /
     <a href="{% url 'catalog' %}"   class="hover:text-gray-900">Каталог</a> /
     <span class="text-gray-900">{{ item.name }}</span>
   </nav>
 
-  <!-- картка товару -->
+
   <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
 
-    <!-- зображення -->
-    <img
-      src="{{ item.image.url }}"
-      alt="{{ item.name }}"
-      class="w-full rounded-xl shadow-md object-cover">
 
-    <!-- опис -->
+    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full rounded-xl shadow-md object-cover">
+
     <div class="flex flex-col space-y-6">
 
       <div>
@@ -36,7 +32,6 @@
         {{ item.description|linebreaksbr }}
       </p>
 
-      <!-- ціна + кнопка -->
       <div class="flex items-center gap-6 mt-auto">
         <span class="text-3xl font-bold text-gray-900 whitespace-nowrap">
           ₴{{ item.price }}
