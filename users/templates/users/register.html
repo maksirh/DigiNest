@@ -1,0 +1,70 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 px-4 py-10">
+
+
+  <div class="w-50 max-w-md bg-white/70 backdrop-blur-md shadow-xl rounded-2xl p-8 md:p-10">
+    <br>
+    <header class="mb-8 text-center space-y-1">
+      <h2 class="text-3xl font-extrabold text-gray-900">Створіть акаунт</h2>
+      <p class="text-sm text-gray-600">Заповніть форму нижче, щоби приєднатися ⚡</p>
+    </header>
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div class="flex flex-col gap-1">
+        <label for="id_username" class="text-sm font-medium text-gray-700">Ім'я користувача</label>
+        <input type="text" name="username" id="id_username" value="{{ form.username.value|default_if_none:'' }}"
+               placeholder="john_doe" autocomplete="username"
+               class="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
+        {% if form.username.errors %}
+          <p class="text-xs text-red-600">{{ form.username.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="id_email" class="text-sm font-medium text-gray-700">Email</label>
+        <input type="email" name="email" id="id_email" value="{{ form.email.value|default_if_none:'' }}"
+               placeholder="you@example.com" autocomplete="email"
+               class="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
+        {% if form.email.errors %}
+          <p class="text-xs text-red-600">{{ form.email.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="id_password1" class="text-sm font-medium text-gray-700">Пароль</label>
+        <input type="password" name="password1" id="id_password1" autocomplete="new-password"
+               class="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
+        {% if form.password1.errors %}
+          <p class="text-xs text-red-600">{{ form.password1.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="id_password2" class="text-sm font-medium text-gray-700">Підтвердіть пароль</label>
+        <input type="password" name="password2" id="id_password2" autocomplete="new-password"
+               class="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
+        {% if form.password2.errors %}
+          <p class="text-xs text-red-600">{{ form.password2.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <button type="submit"
+              class="w-full inline-flex justify-center items-center gap-2 bg-gray-900 text-white font-medium py-3 rounded-lg hover:bg-gray-800 transition">
+        Зареєструватись
+      </button>
+    </form>
+
+    <p class="mt-8 text-center text-sm text-gray-600">
+      Вже маєте акаунт?
+      <a href="#" class="text-gray-900 underline">Увійти</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

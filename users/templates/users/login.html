@@ -1,0 +1,61 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gradient-to-tr from-gray-100 via-gray-200 to-gray-50 px-4 py-12">
+  <div class="w-35p max-w-md relative rounded-3xl bg-white/70 backdrop-blur-lg shadow-2xl overflow-hidden">
+    <div class="absolute -top-10 -left-10 w-36 h-36 bg-gray-900/10 rounded-full blur-3xl animate-pulse" aria-hidden="true"></div>
+
+    <div class="relative z-10 p-10 sm:p-12 space-y-10">
+      <header class="space-y-2 text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Вхід</h1>
+        <p class="text-sm text-gray-600">Раді бачити вас знову 👋</p>
+      </header>
+      <br>
+
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div class="relative flex flex-col gap-1">
+          <label for="id_username" class="sr-only">Ім'я користувача</label>
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 pointer-events-none">
+          </span>
+          <input type="text" name="username" id="id_username" autocomplete="username" placeholder="Username"
+                 value="{{ request.POST.username }}"
+                 class="w-full pl-11 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
+          {% if form.username.errors %}<p class="text-xs text-red-600">{{ form.username.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div class="relative flex flex-col gap-1">
+          <label for="id_password" class="sr-only">Пароль</label>
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 pointer-events-none">
+          </span>
+          <input type="password" name="password" id="id_password" autocomplete="current-password" placeholder="Пароль"
+                 class="w-full pl-11 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900">
+          {% if form.password.errors %}<p class="text-xs text-red-600">{{ form.password.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div class="flex items-center justify-between text-sm text-gray-600 select-none">
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="remember" class="rounded border-gray-300 focus:ring-gray-900">
+            <span>Запам'ятати мене</span>
+          </label>
+          <a href="#" class="hover:text-gray-900 underline">Забули пароль?</a>
+        </div>
+
+        <button type="submit" class="w-full flex justify-center items-center gap-2 bg-gray-900 text-white py-3 rounded-xl font-medium hover:bg-gray-800 active:scale-95 transition">
+          Увійти
+        </button>
+      </form>
+
+       <br>
+      <p class="text-center text-sm text-gray-600">
+        Ще не з нами?
+        <a href="{% url 'users:register' %}" class="text-gray-900 underline">Зареєструватись</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

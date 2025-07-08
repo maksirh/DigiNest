@@ -2,7 +2,7 @@ from django.urls import path
 from products.views import detail, catalog, addproduct
 
 
-name_app = "products"
+app_name = "products"
 
 urlpatterns = [
     path("<int:my_id>/", detail, name="product-detail"),

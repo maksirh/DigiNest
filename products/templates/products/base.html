@@ -2,12 +2,14 @@
 
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DigiNest — Магазин цифрових товарів</title>
   <link rel="stylesheet" href="{% static 'src/styles/styles.css' %}">
 </head>
+
 <body class="bg-gray-50 text-gray-800 font-sans">
 
 
@@ -16,23 +18,35 @@
       <h1 class="text-2xl font-bold text-gray-900">DigiNest</h1>
 
       <nav class="space-x-4 flex-grow flex justify-center">
-        <a href="/"        class="text-gray-600 hover:text-gray-900">Головна</a>
-        <a href="{% url 'catalog' %}" class="text-gray-600 hover:text-gray-900">Каталог</a>
-        <a href="/#about"   class="text-gray-600 hover:text-gray-900">Про нас</a>
+        <a href="/" class="text-gray-600 hover:text-gray-900">Головна</a>
+        <a href="{% url 'products:catalog' %}" class="text-gray-600 hover:text-gray-900">Каталог</a>
+        <a href="/#about" class="text-gray-600 hover:text-gray-900">Про нас</a>
         <a href="/#contact" class="text-gray-600 hover:text-gray-900">Контакти</a>
       </nav>
 
+      {% if request.user.is_authenticated %}
+      <div class="flex items-center gap-4">
+        <span class="text-gray-700">{{ request.user.username }}</span>
+
+        <form action="#" method="post">
+          {% csrf_token %}
+          <button type="submit" class="text-gray-600 hover:text-gray-900">
+            Вийти
+          </button>
+        </form>
+      </div>
+      {% else %}
+      <div class="flex items-center gap-4">
+        <a href="{% url 'users:login' %}" class="text-gray-600 hover:text-gray-900">Увійти</a>
+        <a href="{% url 'users:register' %}" class="text-gray-600 hover:text-gray-900">Зареєструватись</a>
+      </div>
+      {% endif %}
+
       <form id="site-search" class="flex w-full sm:w-auto" action="#" method="get">
         <label for="q" class="sr-only">Пошук</label>
-        <input
-          type="search"
-          name="q"
-          id="q"
-          placeholder="Пошук…"
-          class="w-full sm:w-56 border border-gray-300 rounded-l-lg px-3 py-2 text-sm focus:outline-none focus:border-gray-900"
-          />
-        <button
-          type="submit"
+        <input type="search" name="q" id="q" placeholder="Пошук…"
+          class="w-full sm:w-56 border border-gray-300 rounded-l-lg px-3 py-2 text-sm focus:outline-none focus:border-gray-900" />
+        <button type="submit"
           class="bg-gray-900 text-white px-4 py-2 rounded-r-lg text-sm hover:bg-gray-800 transition">
           🔍
         </button>
@@ -40,10 +54,10 @@
     </div>
   </header>
 
-{% block content %}
+  {% block content %}
 
 
-{% endblock content %}
+  {% endblock content %}
 
 
   <footer class="bg-white shadow-inner text-center py-6 text-sm text-gray-500">
@@ -51,4 +65,5 @@
   </footer>
 
 </body>
+
 </html>
