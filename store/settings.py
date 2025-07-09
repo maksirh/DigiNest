@@ -126,3 +126,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+TEMPLATES[0]["OPTIONS"]["context_processors"] += [
+    "users.context_processors.user_profile",
+]
