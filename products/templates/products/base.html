@@ -26,9 +26,9 @@
 
       {% if request.user.is_authenticated %}
       <div class="flex items-center gap-4">
-        <span class="text-gray-700">{{ request.user.username }}</span>
+        <a href="{% url 'users:profile' %}" class="text-gray-700">{{ request.user.username }}</a>
 
-        <form action="#" method="post">
+        <form action="{% url 'users:logout' %}" method="post">
           {% csrf_token %}
           <button type="submit" class="text-gray-600 hover:text-gray-900">
             Вийти
