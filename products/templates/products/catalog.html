@@ -29,6 +29,9 @@
         <p class="text-gray-700 flex-grow whitespace-pre-line">
           {{ item.description|truncatechars:100 }}
         </p>
+        <p class="text-xl font-bold text-gray-900 whitespace-nowrap">
+          Продавець: {{ item.seller|linebreaksbr }}
+        </p>
         <div class="flex items-center justify-between">
           <span class="text-2xl font-bold text-gray-900">₴{{ item.price }}</span>
           <a href="{% url 'products:product-detail' item.id %}"

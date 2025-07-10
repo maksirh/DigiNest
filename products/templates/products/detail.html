@@ -6,8 +6,8 @@
 
 
   <nav class="text-sm mb-8 text-gray-500">
-    <a href="{% url 'home' %}"      class="hover:text-gray-900">Головна</a> /
-    <a href="{% url 'products:catalog' %}"   class="hover:text-gray-900">Каталог</a> /
+    <a href="{% url 'home' %}" class="hover:text-gray-900">Головна</a> /
+    <a href="{% url 'products:catalog' %}" class="hover:text-gray-900">Каталог</a> /
     <span class="text-gray-900">{{ item.name }}</span>
   </nav>
 
@@ -21,7 +21,7 @@
 
       <div>
         <h1 class="text-3xl font-bold text-gray-900 mb-1">{{ item.name }}</h1>
-        <p  class="text-sm text-gray-500">{{ item.type.name }}</p>
+        <p class="text-sm text-gray-500">{{ item.type.name }}</p>
       </div>
 
       <p class="text-gray-700 leading-relaxed">
@@ -32,16 +32,18 @@
         {{ item.description|linebreaksbr }}
       </p>
 
+      <p class="text-xl font-bold text-gray-900 whitespace-nowrap">
+        Продавець: {{ item.seller|linebreaksbr }}
+      </p>
+
       <div class="flex items-center gap-6 mt-auto">
         <span class="text-3xl font-bold text-gray-900 whitespace-nowrap">
           ₴{{ item.price }}
         </span>
 
-        <form action="#" method="post" class="flex-1">
+        <form action="{% url 'products:add-to-basket' item.id %}" method="post">
           {% csrf_token %}
-          <button
-            class="w-full bg-gray-900 text-white py-3 rounded-xl
-                   hover:bg-gray-800 transition">
+          <button type="submit" class="bg-gray-900 text-white px-6 py-2 rounded-xl hover:bg-gray-800 transition">
             Додати до кошика
           </button>
         </form>

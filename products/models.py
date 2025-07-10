@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class TypeProduct(models.Model):
@@ -15,8 +16,19 @@ class Product(models.Model):
     price = models.IntegerField()
     type = models.ForeignKey(to=TypeProduct, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="products_images", blank=True)
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, default='1')
 
     def __str__(self):
         return self.name
 
 
+class Basket(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Product, blank=True, related_name="baskets")
+
+
+    def total_price(self):
+        return sum(p.price for p in self.products.all())
+
+    def __str__(self):
+        return f"Basket {self.pk} for {self.user.username}"

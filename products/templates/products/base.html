@@ -22,6 +22,12 @@
         <a href="{% url 'products:catalog' %}" class="text-gray-600 hover:text-gray-900">Каталог</a>
         <a href="/#about" class="text-gray-600 hover:text-gray-900">Про нас</a>
         <a href="/#contact" class="text-gray-600 hover:text-gray-900">Контакти</a>
+
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'products:add_product' %}" class="text-gray-600 hover:text-gray-900">Додати товар</a>
+        <a href="{% url 'products:basket' %}" class="text-gray-600 hover:text-gray-900">Кошик</a>
+        {% else %}
+        {% endif %}
       </nav>
 
       {% if request.user.is_authenticated %}
