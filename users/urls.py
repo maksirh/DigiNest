@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import register, profile
+from .views import register, profile, sellerprofile
 from django.contrib.auth.views import LoginView, LogoutView
+
 
 class LogoutPostOnly(LogoutView):
     http_method_names = ["post"]         
@@ -13,5 +14,6 @@ urlpatterns = [
     path("login/", LoginView.as_view(template_name='users/login.html'), name="login"),
     path("logout/", LogoutPostOnly.as_view(), name="logout"),
     path("profile/", profile, name="profile"),
+    path("sellerprofile/<int:seller_id>/", sellerprofile, name="seller_profile"),
 
 ]

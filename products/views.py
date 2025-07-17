@@ -1,17 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, TypeProduct, Basket
 from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView, DeleteView
 
 
-def home(request):
-    return render(request, "products/home.html")
+class ProductHome(ListView):
+    model = Product
+    template_name = "products/home.html"
+    context_object_name = "items"
 
 
-def detail(request, my_id):
-    context = {
-        "item": Product.objects.get(id=my_id)
-    }
-    return render(request, "products/detail.html", context)
+class ProductDetail(DeleteView):
+    model = Product
+    template_name = "products/detail.html"
+    context_object_name = "item"
+
+
 
 def catalog(request):
     context = {

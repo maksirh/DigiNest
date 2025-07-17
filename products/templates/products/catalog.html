@@ -30,7 +30,7 @@
           {{ item.description|truncatechars:100 }}
         </p>
         <p class="text-xl font-bold text-gray-900 whitespace-nowrap">
-          Продавець: {{ item.seller|linebreaksbr }}
+          Продавець: <a href="{% url 'users:seller_profile' item.seller.id %}">{{ item.seller.username|linebreaksbr }}</a>
         </p>
         <div class="flex items-center justify-between">
           <span class="text-2xl font-bold text-gray-900">₴{{ item.price }}</span>

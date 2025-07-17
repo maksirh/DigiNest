@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from .forms import NewUserForm
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.models import User
+from products.models import Product
 
 def register(request):
     if request.method == "POST":
@@ -19,3 +20,10 @@ def register(request):
 def profile(request):
     return render(request, "users/profile.html")
 
+
+def sellerprofile(request, seller_id):
+    context = {
+        "seller": User.objects.get(id=seller_id),
+         "items": Product.objects.filter(id=seller_id).select_related("type")
+               }
+    return render(request, "users/sellerprofile.html", context)

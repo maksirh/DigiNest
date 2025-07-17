@@ -33,7 +33,7 @@
       </p>
 
       <p class="text-xl font-bold text-gray-900 whitespace-nowrap">
-        Продавець: {{ item.seller|linebreaksbr }}
+        Продавець: <a href="{% url 'users:seller_profile' item.seller.id %}">{{ item.seller|linebreaksbr }}</a>
       </p>
 
       <div class="flex items-center gap-6 mt-auto">

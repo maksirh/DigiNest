@@ -1,0 +1,33 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+
+<section class="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gradient-to-tr from-gray-100 via-gray-200 to-gray-50 px-4 py-12">
+  <div class="w-full max-w-xl bg-white/70 backdrop-blur-lg shadow-2xl rounded-3xl overflow-hidden">
+
+    <div class="h-32 bg-gradient-to-r from-gray-800 to-gray-600"></div>
+
+    <div class="relative -mt-14 px-8">
+      {% if profile.image %}
+        <img src="{{ profile.image.url }}" alt="avatar"
+             class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md">
+      {% else %}
+        <div class="w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center text-3xl font-semibold text-gray-700 border-4 border-white shadow-md">
+          {{ seller.username|upper }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="px-8 pb-10 pt-6 space-y-4">
+      <h1 class="text-3xl font-bold text-gray-900">{{ seller.username }}</h1>
+      <p class="text-gray-600 flex items-center gap-2">
+
+        {{ seller.email }}</p>
+      <p class="text-gray-600 flex items-center gap-2">
+
+        {{ seller.profile.contact_number }}</p>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
