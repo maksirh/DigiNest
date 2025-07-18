@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, TypeProduct, Basket
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DeleteView
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView
+from django.urls import reverse_lazy
+from .forms import ProductForm
 
 
 class ProductHome(ListView):
@@ -10,7 +12,7 @@ class ProductHome(ListView):
     context_object_name = "items"
 
 
-class ProductDetail(DeleteView):
+class ProductDetail(DetailView):
     model = Product
     template_name = "products/detail.html"
     context_object_name = "item"
@@ -60,7 +62,6 @@ def basket(request):
     )
 
 
-
 @login_required
 def add_to_basket(request, product_id):
 
@@ -69,3 +70,23 @@ def add_to_basket(request, product_id):
     basket.products.add(product) 
 
     return redirect("products:basket")
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy("users:profile")
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    context_object_name = "item"
+    template_name = "products/editproduct.html"
+    success_url = reverse_lazy("products:catalog")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["types"] = TypeProduct.objects.all()
+        return context
+
+

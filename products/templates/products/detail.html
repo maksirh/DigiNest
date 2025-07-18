@@ -41,13 +41,41 @@
           ₴{{ item.price }}
         </span>
 
-        <form action="{% url 'products:add-to-basket' item.id %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="bg-gray-900 text-white px-6 py-2 rounded-xl hover:bg-gray-800 transition">
-            Додати до кошика
-          </button>
-        </form>
-      </div>
+      <div class="flex items-center gap-4 mt-6">
+  {# кнопка «Додати до кошика» #}
+  <form action="{% url 'products:add-to-basket' item.id %}"
+        method="post" class="flex-1">
+    {% csrf_token %}
+    <button type="submit"
+        class="w-full min-w-[9rem] bg-gray-900 text-white py-3 rounded-xl
+               hover:bg-gray-800 transition text-center">
+      Додати до кошика
+    </button>
+  </form>
+
+  {% if item.seller.username == request.user.username %}
+  {# кнопка «Видалити» #}
+  <form action="{% url 'products:delete-product' item.id %}"
+        method="post" class="flex-1">
+    {% csrf_token %}
+    <button type="submit"
+        class="w-full min-w-[9rem] bg-gray-900 text-white py-3 rounded-xl
+               hover:bg-gray-800 transition text-center">
+      Видалити продукт
+    </button>
+  </form>
+
+  {# кнопка «Редагувати» #}
+  <form action="{% url 'products:edit-product' item.id %}"
+        method="get" class="flex-1">
+    <button type="submit"
+        class="w-full min-w-[12rem] bg-gray-900 text-white py-3 rounded-xl
+               hover:bg-gray-800 transition text-center">
+      Редагувати
+    </button>
+  </form>
+  {% endif %}
+</div>
 
     </div>
   </div>
