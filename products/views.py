@@ -20,8 +20,14 @@ class ProductDetail(DetailView):
 
 
 def catalog(request):
-    items = Product.objects.all()
-    paginator = Paginator(items, 2) 
+    page_obj = items = Product.objects.all()
+
+    item_name = request.GET.get("search")
+
+    if item_name != '' and item_name is not None:
+        page_obj = items.filter(name__icontains = item_name)
+
+    paginator = Paginator(page_obj, 2) 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number) 
 
