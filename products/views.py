@@ -3,6 +3,7 @@ from .models import Product, TypeProduct, Basket
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy
+from django.core.paginator import Paginator
 from .forms import ProductForm
 
 
@@ -18,13 +19,16 @@ class ProductDetail(DetailView):
     context_object_name = "item"
 
 
-
 def catalog(request):
+    items = Product.objects.all()
+    paginator = Paginator(items, 2) 
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number) 
+
     context = {
-        "products": Product.objects.all()
+        "products": page_obj, 
     }
     return render(request, "products/catalog.html", context)
-
 
 @login_required
 def addproduct(request):

@@ -45,6 +45,52 @@
     <p class="col-span-full text-center text-gray-500">Товари не знайдено.</p>
     {% endfor %}
   </div>
+<br>
+{% if products.paginator.num_pages > 1 %}
+<nav aria-label="Пагінація" class="mt-10">
+  <ul class="flex justify-center items-center gap-2 text-sm">
 
+    {% if products.has_previous %}
+      <li>
+        <a href="?page=1"
+           class="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-100">
+          « Перша
+        </a>
+      </li>
+      <li>
+        <a href="?page={{ products.previous_page_number }}"
+           class="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-100">
+          ‹ Попередня
+        </a>
+      </li>
+    {% endif %}
+
+    <li>
+      <span class="inline-block min-w-[3rem] text-center px-3 py-2 rounded-lg
+                   bg-gray-900 text-white">
+        {{ products.number }} / {{ products.paginator.num_pages }}
+      </span>
+    </li>
+
+    {% if products.has_next %}
+      <li>
+        <a href="?page={{ products.next_page_number }}"
+           class="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-100">
+          Наступна ›
+        </a>
+      </li>
+      <li>
+        <a href="?page={{ products.paginator.num_pages }}"
+           class="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-100">
+          Остання »
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+</nav>
+{% endif %}
 </div>
+
+
 {% endblock %}
