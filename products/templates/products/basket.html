@@ -30,13 +30,30 @@
     {% endfor %}
   </div>
 
-  <div class="flex justify-between items-center pt-8">
-    <div class="text-xl font-bold text-gray-900">Сума: ₴{{ basket_total }}</div>
-    <a href="#" class="bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition">Оформити замовлення</a>
+  <div class="flex flex-col md:flex-row justify-between items-center pt-8 gap-6">
+  <div class="text-xl font-bold text-gray-900">
+    Сума: ₴{{ basket_total }}
   </div>
+
+  <button id="checkout-btn" class="bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition w-full md:w-auto">
+    Оформити замовлення
+  </button>
+</div>
 
   {% else %}
     <p class="text-center text-gray-600">Кошик порожній 😔</p>
   {% endif %}
 </section>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  const stripe = Stripe("{{ STRIPE_PUBLISHABLE_KEY }}");
+
+  document.getElementById("checkout-btn").addEventListener("click", () => {
+    fetch("{% url 'products:checkout' %}", {method: "POST", headers: {"X-CSRFToken": "{{ csrf_token }}"}})
+    .then(r => r.json())
+    .then(data => stripe.redirectToCheckout({sessionId: data.id}));
+  });
+</script>
+
 {% endblock %}

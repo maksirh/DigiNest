@@ -25,7 +25,7 @@ class Product(models.Model):
 class Basket(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product, blank=True, related_name="baskets")
-
+    paid = models.BooleanField(default=False)
 
     def total_price(self):
         return sum(p.price for p in self.products.all())

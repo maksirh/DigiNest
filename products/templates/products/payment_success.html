@@ -1,0 +1,20 @@
+{% extends "products/base.html" %}
+
+{% block content %}
+<section class="flex flex-col items-center justify-center min-h-[60vh] px-6 py-20 text-center">
+  <svg class="w-16 h-16 text-green-600 mb-6" fill="none" stroke="currentColor" stroke-width="2"
+       viewBox="0 0 24 24">
+    <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+  <h1 class="text-3xl font-bold mb-4">Дякуємо за покупку!</h1>
+  <p class="text-gray-600 mb-8">
+    Оплату успішно проведено. Посилання на цифрові товари вже надіслано на вашу електронну пошту.
+  </p>
+
+  <a href="{% url 'products:catalog' %}"
+     class="bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition">
+    Повернутися до каталогу
+  </a>
+</section>
+{% endblock %}

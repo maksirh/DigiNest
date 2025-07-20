@@ -2,10 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, TypeProduct, Basket
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
 from .forms import ProductForm
+from django.http import JsonResponse, HttpResponse, Http404
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+import json
+import stripe
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class ProductHome(ListView):
     model = Product
@@ -17,7 +23,10 @@ class ProductDetail(DetailView):
     model = Product
     template_name = "products/detail.html"
     context_object_name = "item"
-
+    pk_url_kwarg = "pk"
+    
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 def catalog(request):
     page_obj = items = Product.objects.all()
@@ -68,8 +77,9 @@ def basket(request):
     return render(
         request,
         "products/basket.html",
-        {"basket_items": items, "basket_total": total},
+        {"basket_items": items, "basket_total": total, "STRIPE_PUBLISHABLE_KEY": settings.STRIPE_PUBLISHABLE_KEY,},
     )
+
 
 
 @login_required
@@ -99,4 +109,61 @@ class ProductUpdateView(UpdateView):
         context["types"] = TypeProduct.objects.all()
         return context
 
+    
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig = request.META.get("HTTP_STRIPE_SIGNATURE")
+    endpoint_secret = "whsec_..."
 
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig, endpoint_secret
+        )
+    except (ValueError, stripe.error.SignatureVerificationError):
+        return HttpResponse(status=400)
+
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        basket_id = session.get("client_reference_id")
+        Basket.objects.filter(pk=basket_id).update(paid=True)
+
+    return HttpResponse(status=200)
+
+
+def basket_success(request):
+    return render(request, "products/payment_success.html")
+
+
+def basket_cancel(request):
+    return render(request, "products/payment_cancel.html")
+
+
+@login_required
+def create_checkout_session(request):
+    basket, _ = Basket.objects.get_or_create(user=request.user)
+    items = basket.products.all()
+    if not items:
+        raise Http404("Basket is empty")
+
+    line_items = []
+    for p in items:
+        line_items.append({
+            "price_data": {
+                "currency": "uah",
+                "unit_amount": p.price * 100,
+                "product_data": {"name": p.name},
+            },
+            "quantity": 1,
+        })
+
+    session = stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        mode="payment",
+        line_items=line_items,
+        success_url=f"{settings.DOMAIN}/products/basket/success/?session_id={{CHECKOUT_SESSION_ID}}",
+        cancel_url=f"{settings.DOMAIN}/products/basket/cancel/",
+        client_reference_id=str(basket.id),
+        metadata={"user_id": request.user.id},
+    )
+    return JsonResponse({"id": session.id})

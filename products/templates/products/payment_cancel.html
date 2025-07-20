@@ -1,0 +1,27 @@
+{% extends "products/base.html" %}
+
+{% block content %}
+<section class="flex flex-col items-center justify-center min-h-[60vh] px-6 py-20 text-center">
+  <svg class="w-16 h-16 text-red-600 mb-6" fill="none" stroke="currentColor" stroke-width="2"
+       viewBox="0 0 24 24">
+    <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+  <h1 class="text-3xl font-bold mb-4">Платіж скасовано</h1>
+  <p class="text-gray-600 mb-8">
+    Ви відмінили оплату або сталася помилка. Спробуйте ще раз або звʼяжіться з нами,
+    якщо проблема не зникне.
+  </p>
+
+  <div class="flex flex-col sm:flex-row gap-4">
+    <a href="{% url 'products:basket' %}"
+       class="bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition">
+      Повернутися до кошика
+    </a>
+    <a href="{% url 'products:catalog' %}"
+       class="bg-gray-100 text-gray-900 px-8 py-3 rounded-lg hover:bg-gray-200 transition">
+      Переглянути інші товари
+    </a>
+  </div>
+</section>
+{% endblock %}
