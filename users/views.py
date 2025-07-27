@@ -24,6 +24,6 @@ def profile(request):
 def sellerprofile(request, seller_id):
     context = {
         "seller": User.objects.get(id=seller_id),
-         "items": Product.objects.filter(id=seller_id).select_related("type")
+         "items": Product.objects.filter(id=seller_id)
                }
     return render(request, "users/sellerprofile.html", context)
