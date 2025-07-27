@@ -10,13 +10,16 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import json
 import stripe
+from django.db.models import F
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class ProductHome(ListView):
-    model = Product
     template_name = "products/home.html"
     context_object_name = "items"
+
+    def get_queryset(self):
+        return Product.objects.order_by("-views")[:3]
 
 
 class ProductDetail(DetailView):
@@ -25,8 +28,17 @@ class ProductDetail(DetailView):
     context_object_name = "item"
     pk_url_kwarg = "pk"
     
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        Product.objects.filter(pk=obj.pk).update(views=F("views") + 1)
+        obj.refresh_from_db(fields=["views"])
+        return obj
+    
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
+    
+
+
 
 def catalog(request):
     page_obj = items = Product.objects.all()

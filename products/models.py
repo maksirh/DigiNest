@@ -17,9 +17,13 @@ class Product(models.Model):
     type = models.ForeignKey(to=TypeProduct, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="products_images", blank=True)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, default='1')
+    views = models.BigIntegerField(default=0)
 
     def __str__(self):
         return self.name
+    
+    def update_views(self):
+        self.views += 1
 
 
 class Basket(models.Model):
