@@ -14,13 +14,11 @@
 <section id="catalog" class="py-16">
   <div class="container mx-auto px-4">
     <h3 class="text-2xl font-bold text-center mb-10">Популярні товари</h3>
-
-
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
       {% for item in items %}
       <div class="bg-white rounded-xl shadow-md p-6">
-        <img src="{{ item.image.url }}" alt="Product 1" class="rounded mb-4">
+        <img src="{{ item.image.url }}" alt="Product 1" width="256px" height="256px"  class="rounded mb-4">
         <h4 class="text-lg font-semibold mb-2">{{ item.name }}</h4>
         <p class="text-sm text-gray-600 mb-4">{{ item.shortDescription }}</p>
         <span class="block font-bold text-gray-900 mb-2">₴{{item.price}}</span>

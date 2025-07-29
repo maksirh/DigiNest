@@ -13,13 +13,13 @@
 
       <div class="relative -mt-14 px-8">
         {% if profile.image %}
-          <img src="{{ profile.image.url }}" alt="avatar"
-               class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md">
+        <img src="{{ profile.image.url }}" alt="avatar"
+          class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md">
         {% else %}
-          <div class="w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center
+        <div class="w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center
                       text-3xl font-semibold text-gray-700 border-4 border-white shadow-md">
-            {{ request.user.username|slice:":1"|upper }}
-          </div>
+          {{ request.user.username|slice:":1"|upper }}
+        </div>
         {% endif %}
       </div>
 
@@ -30,7 +30,7 @@
         <p class="text-gray-600">{{ profile.contact_number }}</p>
 
         <div class="pt-4 flex gap-4">
-          <a href="#" class="flex-1 text-center bg-gray-900 text-white py-2 rounded-lg
+          <a href="{% url 'users:profile-edit' %}" class="flex-1 text-center bg-gray-900 text-white py-2 rounded-lg
                              hover:bg-gray-800 transition">Редагувати профіль</a>
           <form action="{% url 'users:logout' %}" method="post" class="flex-1">
             {% csrf_token %}
@@ -45,28 +45,27 @@
       <h2 class="text-2xl font-bold text-gray-900">Мої товари</h2>
 
       {% if my_products %}
-        <div class="grid sm:grid-cols-2 gap-6">
-          {% for p in my_products %}
-            <a href="{% url 'products:product-detail' p.id %}"
-               class="block bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
+      <div class="grid sm:grid-cols-2 gap-6">
+        {% for p in my_products %}
+        <a href="{% url 'products:product-detail' p.id %}"
+          class="block bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
 
-              {% if p.image %}
-                <img src="{{ p.image.url }}" alt="{{ p.name }}"
-                     class="w-full h-40 object-cover">
-              {% else %}
-                <img src="{% static 'img/placeholder-product.jpg' %}" class="w-full h-40 object-cover">
-              {% endif %}
+          {% if p.image %}
+          <img src="{{ p.image.url }}" alt="{{ p.name }}" width="256px" height="256px" class="w-full h-40 object-cover">
+          {% else %}
+          <img src="{% static 'img/placeholder-product.jpg' %}" class="w-full h-40 object-cover">
+          {% endif %}
 
-              <div class="p-4 space-y-1">
-                <h3 class="font-semibold text-lg text-gray-900 truncate">{{ p.name }}</h3>
-                <p class="text-gray-500 text-sm truncate">{{ p.shortDescription }}</p>
-                <span class="block font-bold text-gray-900">₴{{ p.price }}</span>
-              </div>
-            </a>
-          {% endfor %}
-        </div>
+          <div class="p-4 space-y-1">
+            <h3 class="font-semibold text-lg text-gray-900 truncate">{{ p.name }}</h3>
+            <p class="text-gray-500 text-sm truncate">{{ p.shortDescription }}</p>
+            <span class="block font-bold text-gray-900">₴{{ p.price }}</span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
       {% else %}
-        <p class="text-gray-500">Ви ще не додали жодного товару.</p>
+      <p class="text-gray-500">Ви ще не додали жодного товару.</p>
       {% endif %}
     </div>
 

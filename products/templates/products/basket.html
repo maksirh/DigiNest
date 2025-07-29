@@ -10,9 +10,9 @@
     {% for product in basket_items %}
     <div class="flex items-center gap-4 p-4 bg-white shadow rounded-xl">
       {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-20 h-20 object-cover rounded-lg">
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-20 h-20 object-cover rounded-lg">
       {% else %}
-        <img src="{% static 'img/placeholder-product.jpg' %}" alt="placeholder" class="w-20 h-20 object-cover rounded-lg">
+      <img src="{% static 'img/placeholder-product.jpg' %}" alt="placeholder" class="w-20 h-20 object-cover rounded-lg">
       {% endif %}
 
       <div class="flex-1 space-y-1">
@@ -23,7 +23,9 @@
       <form action="#" method="post">
         {% csrf_token %}
         <button class="text-gray-400 hover:text-red-600" title="Видалити">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
       </form>
     </div>
@@ -31,19 +33,20 @@
   </div>
 
   <div class="flex flex-col md:flex-row justify-between items-center pt-8 gap-6">
-  <div class="text-xl font-bold text-gray-900">
-    Сума: ₴{{ basket_total }}
+    <div class="text-xl font-bold text-gray-900">
+      Сума: ₴{{ basket_total }}
+    </div>
+
+    <button id="checkout-btn"
+      class="bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition w-full md:w-auto">
+      Оформити замовлення
+    </button>
   </div>
 
-  <button id="checkout-btn" class="bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition w-full md:w-auto">
-    Оформити замовлення
-  </button>
-</div>
-
   {% else %}
-    <p class="text-center text-gray-600">Кошик порожній 😔</p>
+  <p class="text-center text-gray-600">Кошик порожній 😔</p>
   {% endif %}
-
+  <br>
   <a href="{% url 'products:my-files' %}" class="bg-gray-900 text-white px-6 py-3 rounded-lg">До моїх файлів →</a>
 
 </section>
@@ -53,9 +56,9 @@
   const stripe = Stripe("{{ STRIPE_PUBLISHABLE_KEY }}");
 
   document.getElementById("checkout-btn").addEventListener("click", () => {
-    fetch("{% url 'products:checkout' %}", {method: "POST", headers: {"X-CSRFToken": "{{ csrf_token }}"}})
-    .then(r => r.json())
-    .then(data => stripe.redirectToCheckout({sessionId: data.id}));
+    fetch("{% url 'products:checkout' %}", { method: "POST", headers: { "X-CSRFToken": "{{ csrf_token }}" } })
+      .then(r => r.json())
+      .then(data => stripe.redirectToCheckout({ sessionId: data.id }));
   });
 </script>
 
