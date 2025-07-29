@@ -1,16 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, TypeProduct, Basket
+from .models import Product, TypeProduct, Basket, Purchase
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
 from .forms import ProductForm
-from django.http import JsonResponse, HttpResponse, Http404
+from django.http import JsonResponse, HttpResponse, Http404, FileResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import json
 import stripe
 from django.db.models import F
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -37,8 +41,6 @@ class ProductDetail(DetailView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
     
-
-
 
 def catalog(request):
     page_obj = items = Product.objects.all()
@@ -68,11 +70,12 @@ def addproduct(request):
         type_id = request.POST.get("type")
         image = request.FILES.get("image")
         seller = request.user
+        uploaded_file    = request.FILES.get("file")  
 
         type_obj = TypeProduct.objects.get(id=type_id) if type_id else None
 
         product = Product.objects.create(name=name, shortDescription=short_desc, description=description,
-            price=price, type=type_obj, image=image, seller=seller)
+            price=price, type=type_obj, image=image, seller=seller, file=uploaded_file)
 
 
         return redirect('products:product-detail', product.id)
@@ -121,24 +124,44 @@ class ProductUpdateView(UpdateView):
         context["types"] = TypeProduct.objects.all()
         return context
 
-    
+
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
     sig = request.META.get("HTTP_STRIPE_SIGNATURE")
-    endpoint_secret = "whsec_..."
 
     try:
         event = stripe.Webhook.construct_event(
-            payload, sig, endpoint_secret
+            payload, sig, settings.STRIPE_WEBHOOK_SECRET
         )
-    except (ValueError, stripe.error.SignatureVerificationError):
+    except (ValueError, stripe.error.SignatureVerificationError) as e:
+        logger.warning("Webhook signature error: %s", e)
         return HttpResponse(status=400)
+
+    logger.info("Webhook type: %s", event["type"])
 
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
+        logger.info("Session payload: %s", session)
+
         basket_id = session.get("client_reference_id")
-        Basket.objects.filter(pk=basket_id).update(paid=True)
+        logger.info("client_reference_id=%s", basket_id)
+
+        basket = Basket.objects.filter(pk=basket_id, paid=False).first()
+        if not basket:
+            logger.warning("Basket not found or already paid")
+            return HttpResponse(status=200)
+
+        Purchase.objects.bulk_create([
+            Purchase(user=basket.user, product=p)
+            for p in basket.products.all()
+            if not Purchase.objects.filter(user=basket.user, product=p).exists()
+        ])
+
+        basket.products.clear()
+        basket.paid = True
+        basket.save(update_fields=["paid"])
+        logger.info("Basket %s marked paid", basket_id)
 
     return HttpResponse(status=200)
 
@@ -179,3 +202,17 @@ def create_checkout_session(request):
         metadata={"user_id": request.user.id},
     )
     return JsonResponse({"id": session.id})
+
+
+@login_required
+def my_files(request):
+    purchases = (Purchase.objects.select_related("product").filter(user=request.user).order_by("-bought_at"))
+    return render(request, "products/my_files.html", {"purchases": purchases})
+
+
+@login_required
+def file_download(request, pk):
+    purchase = get_object_or_404(Purchase, pk=pk, user=request.user)
+    if not purchase.product.file:
+        raise Http404
+    return FileResponse(purchase.product.file.open("rb"), as_attachment=True)

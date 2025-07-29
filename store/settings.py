@@ -124,5 +124,19 @@ environ.Env.read_env(Path(__file__).resolve().parent.parent / ".env")
 
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY")
+STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET")
 
 DOMAIN = "http://127.0.0.1:8000"
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL  = "/media/"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}

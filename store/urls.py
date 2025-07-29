@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from products.views import ProductHome
+from products.views import ProductHome, stripe_webhook
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -9,7 +9,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', ProductHome.as_view(), name = "home"),
     path('products/', include("products.urls", namespace = "products")),
-    path('users/', include("users.urls", namespace = "users"))
+    path('users/', include("users.urls", namespace = "users")),
+    path("webhook/stripe/", stripe_webhook, name="stripe-webhook"),
 ]
 
 

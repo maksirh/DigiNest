@@ -18,12 +18,25 @@ class Product(models.Model):
     image = models.ImageField(upload_to="products_images", blank=True)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, default='1')
     views = models.BigIntegerField(default=0)
+    file  = models.FileField(upload_to="products_files/", blank=True, null=True)
 
     def __str__(self):
         return self.name
     
     def update_views(self):
         self.views += 1
+
+
+class Purchase(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    bought_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "product") 
+
+    def __str__(self):
+        return f"{self.user} → {self.product}"
 
 
 class Basket(models.Model):

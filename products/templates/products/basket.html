@@ -43,6 +43,9 @@
   {% else %}
     <p class="text-center text-gray-600">Кошик порожній 😔</p>
   {% endif %}
+
+  <a href="{% url 'products:my-files' %}" class="bg-gray-900 text-white px-6 py-3 rounded-lg">До моїх файлів →</a>
+
 </section>
 
 <script src="https://js.stripe.com/v3/"></script>
