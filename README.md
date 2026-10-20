@@ -1,61 +1,85 @@
-# DigiNest — магазин цифрових товарів
+# DigiNest
 
-**DigiNest** — це e-commerce-движок на **Django 5**, розрахований на продаж шаблонів, e-книг, іконок та іншого цифрового контенту. У репозиторії вже налаштовані Tailwind CSS, система авторизації, кошик і локальна LLM-інтеграція для «розумного» пошуку.
+Marketplace for digital goods (templates, e-books, icons, etc.) built with Django: users list products with downloadable files, buy them via **Stripe Checkout**, and download purchases after a verified webhook.
 
----
+> **Demo:** TODO — add a live demo link (or remove this line)
 
-## 🔥 Основні можливості
+![DigiNest home page](docs/home.png)
 
-| Блок | Функціонал |
-|------|------------|
-| **Каталог** | пагінація, фільтр, звичайний та AI-пошук |
-| **Картка товару** | назва, ціна, опис, зображення, кнопка «Додати до кошика» |
-| **Кошик** | Many-to-Many із Product, підрахунок суми, видалення позицій |
-| **Auth** | реєстрація, логін, профіль (аватар, телефон) |
-| **Tailwind 4** | чорно-білий clean-theme (локальна збірка, без CDN) |
-| **AI Search** | локальна Llama-модель (GGUF) через API `/ai-suggest/` |
-| **Адмінка** | Django admin із кастомним `ProductAdmin` |
+> **More screenshots:** TODO — catalog, product page, basket/checkout
 
-<p align="center">
-  <img src="docs/home.png" width="720" alt="Головна сторінка DigiNest">
-</p>
+## Features
 
----
+- Product catalog with search by name and pagination
+- Product page with view counter; top-3 most viewed products on the home page
+- Sellers can add, edit and delete their own products (image + downloadable file)
+- Seller profile pages
+- Basket (one per user) with total price
+- **Stripe Checkout** payment (UAH) and a **Stripe webhook** (`/webhook/stripe/`) with signature verification that records purchases and clears the basket
+- Purchased file download endpoint (served only to the buyer)
+- Registration, login/logout, profile with avatar and phone number
+- Tailwind CSS 4 styling (local build, no CDN)
+- Experimental: `products/ai_utils.py` wraps a local GGUF Llama model via `llama-cpp-python` (not wired into views yet)
 
-## ⚙ Технологічний стек
+## Tech stack
 
-* Python 3.12 · Django 5.2  
-* Tailwind CSS 4 (+ PostCSS, Autoprefixer)  
-* llama.cpp + llama-cpp-python 0.2 (формат GGUF)  
-* SQLite 3 (легко змінюється на PostgreSQL/MySQL)
+- Python 3.12, Django 5.2
+- Stripe (Checkout + webhooks), django-environ
+- SQLite (default)
+- Tailwind CSS 4 + PostCSS (npm)
+- llama-cpp-python (experimental)
 
----
+## Project structure
 
-## 🚀 Швидкий старт (локально)
+```
+store/      project settings and root URLs (incl. Stripe webhook)
+products/   products, types, basket, purchases, checkout, downloads
+users/      profiles, registration, seller pages
+static/     Tailwind source and compiled CSS
+docs/       screenshots
+```
 
-> **Windows PowerShell**; на Linux/macOS — змініть шляхи та активацію `venv`.
+## Running locally
 
-```powershell
-git clone https://github.com/your-user/DigiNest.git
+```bash
+git clone https://github.com/maksirh/DigiNest.git
 cd DigiNest
-
-# 1) Python-довкілля
 python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+source venv/bin/activate            # Windows: venv\Scripts\activate
 
-# 2) Міграції та суперкористувач
-python manage.py makemigrations
+pip install django==5.2.3 django-environ stripe pillow
+# (requirements.txt currently lists only Django and its dependencies)
+```
+
+Create `.env` next to `manage.py`:
+
+```env
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+```bash
+python manage.py makemigrations users products
 python manage.py migrate
 python manage.py createsuperuser
 
-# 3) Завантажити LLM-модель (≈4 ГБ, GGUF)
-$env:HF_TOKEN = "hf_xxxxxxxxxxxxxxxxx"
-python scripts\get_model.py   # збережеться в store\models\…
-
-# 4) Зібрати Tailwind
 npm install
-npm run build   # постійний watch: npx @tailwindcss/cli …
+npm run build        # Tailwind in watch mode (separate terminal)
 
-# 5) Запуск
 python manage.py runserver
+```
+
+Forward Stripe webhooks to the local server with the Stripe CLI:
+
+```bash
+stripe listen --forward-to localhost:8000/webhook/stripe/
+```
+
+## TODO
+
+- [ ] Screenshots / demo link
+- [ ] Complete `requirements.txt`, add `.env.example` and `.gitignore`
+- [ ] Add missing templates `products/my_files.html` and `users/profile_edit.html`
+- [ ] Wire up (or remove) the local LLM search
+- [ ] Automated tests
